@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "param.schema.json",
+    "type": "object",
+    "additionalProperties": {
+        "$ref": "#/$defs/param"
+    },
+    "$defs": {
+        "param": {
+            "anyOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "key": {
+                            "type": "string",
+                            "description": "Parameter key"
+                        },
+                        "keyPattern": {
+                            "type": "string",
+                            "description": "Regex for describing dynamic params",
+                            "examples": ["^ud[0-9]$"] // results in ud1, ud2,...ud9 param keys
+                        }
+                    },
+                    "anyOf": [
+                        {
+                            "required": ["key", "description"],
+                            "not": { "required": ["keyPattern"] },
+                            "additionalProperties": true
+                        },
+                        {
+                            "required": ["keyPattern", "description"],
+                            "not": { "required": ["key"] },
+                            "additionalProperties": true
+                        }
+                    ]
+                },
+                {
+                    "type": "string",
+                    "description": "Shortcut to a common parameter."
+                }
+            ]
+        }
+    }
+}

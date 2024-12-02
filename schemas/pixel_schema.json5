@@ -1,0 +1,82 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "pixel.schema.json",
+    "title": "Pixel",
+    "description": "A schema defining how DDG pixels are triggered and what data they send",
+    "type": "object",
+    "additionalProperties": {
+        "$ref": "#/$defs/pixel"
+    },
+    "$defs": {
+        "pixel": {
+            "type": "object",
+            "required": ["description", "owners", "triggers"],
+            "additionalProperties": false,
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "A description of when the pixel fires and its purpose"
+                },
+                "owners": {
+                    "type": "array",
+                    "description": "Usernames of the people responsible for this pixel",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "triggers": {
+                    "type": "array",
+                    "description": "What triggers this pixel",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "page_load", // pixel fires when a webpage is loaded
+                            "new_tab", // pixel fires when a new tab is opened
+                            "search_ddg", // pixel fires when user performs a search
+                            "startup", // pixel fires on app startup
+                            "scheduled", // pixel fires periodically
+                            "user_submitted", // pixel fires when user submits a form
+                            "exception", // pixel fires when an exception/crash occurs
+                            "other" // catch-all
+                        ]
+                    }
+                },
+                "suffixes": {
+                    "type": "array",
+                    "description": "List of pixel suffix combinations under the main pixel prefix. Can be a shortcut to a common suffix",
+                    "items": {
+                        "$ref": "suffix.schema.json#/$defs/suffix"
+                    }
+                },
+                "parameters": {
+                    "type": "array",
+                    "description": "List of parameters sent by this pixel. Can be a shortcut to a common parameter",
+                    "items": {
+                        "$ref": "param.schema.json#/$defs/param"
+                    }
+                },
+                "privacyReview": {
+                    "type": "array",
+                    "description": "Link(s) to a privacy review(s) of this pixel",
+                    "items": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                },
+                "expires": {
+                    "type": "string",
+                    "description": "The date this pixel is no longer valid",
+                    "format": "date"
+                },
+                "grafanaDashboards": {
+                    "type": "array",
+                    "description": "Link(s) to Grafana dashboards that use this pixel",
+                    "items": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                }
+            }
+        }
+    }
+}

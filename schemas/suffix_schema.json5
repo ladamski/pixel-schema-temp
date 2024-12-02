@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "suffix.schema.json",
+    "type": "object",
+    "additionalProperties": {
+        "$ref": "#/$defs/suffix"
+    },
+    "$defs": {
+        "suffix": {
+            "anyOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        // useful for static portions of pixel names that appear in between parametrized ones
+                        "key": {
+                            "type": "string",
+                            "description": "Suffix key"
+                        }
+                    },
+                    "required": ["description"],
+                    "additionalProperties": true
+                },
+                {
+                    "type": "string",
+                    "description": "Shortcut to a common suffix"
+                }
+            ]
+        }
+    }
+}
