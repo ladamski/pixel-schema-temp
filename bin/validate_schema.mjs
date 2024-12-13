@@ -47,10 +47,9 @@ function validateFile(file) {
 }
 
 function validateFolder(folder) {
-    fs.readdirSync(folder).forEach((file) => {
+    fs.readdirSync(folder, { recursive: true }).forEach((file) => {
         const fullPath = path.join(folder, file);
         if (fs.statSync(fullPath).isDirectory()) {
-            validateFolder(fullPath);
             return;
         }
 
