@@ -32,6 +32,7 @@ const argv = yargs(hideBin(process.argv))
 
 // 1) Validate common params and suffixes
 const mainDir = argv.dirPath;
+const pixelsDir = path.join(mainDir, 'pixels');
 const commonParams = JSON5.parse(fs.readFileSync(`${mainDir}/common_params.json`));
 const commonSuffixes = JSON5.parse(fs.readFileSync(`${mainDir}/common_suffixes.json`));
 const validator = new DefinitionsValidator(commonParams, commonSuffixes);
@@ -39,17 +40,25 @@ logErrors('ERROR in common_params.json:', validator.validateCommonParamsDefiniti
 logErrors('ERROR in common_suffixes.json:', validator.validateCommonSuffixesDefinition());
 
 // 2) Validate pixels and params
-const pixelsDir = path.join(mainDir, 'pixels');
 function validateFile(file) {
     console.log(`Validating pixels definition: ${file}`);
-    const pixelsDef = JSON5.parse(fs.readFileSync(path.join(pixelsDir, file)));
+    const pixelsDef = JSON5.parse(fs.readFileSync(file));
     logErrors(`ERROR in ${file}:`, validator.validatePixelsDefinition(pixelsDef));
 }
 
-if (argv.file) {
-    validateFile(argv.file);
-} else {
-    fs.readdirSync(pixelsDir).forEach((file) => {
-        validateFile(file);
+function validateFolder(folder) {
+    fs.readdirSync(folder, { recursive: true }).forEach((file) => {
+        const fullPath = path.join(folder, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+            return;
+        }
+
+        validateFile(fullPath);
     });
+}
+
+if (argv.file) {
+    validateFile(path.join(pixelsDir, argv.file));
+} else {
+    validateFolder(pixelsDir);
 }
