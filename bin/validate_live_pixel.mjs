@@ -43,7 +43,8 @@ function queryClickhouse(pixelDefs) {
     const pixelQueryResults = {};
     for(const pixel of Object.keys(pixelDefs)) {
         console.log('Querying for', pixel)
-        const clickhouseQuery = spawnSync( 'clickhouse-client', [ '--host',  clickhouseHost, '--query', `SELECT DISTINCT request FROM metrics.pixels WHERE pixel_id = 'win' AND date > now() - INTERVAL 30 DAY AND pixel LIKE '${pixel}%' LIMIT 1000` ] );
+        const pixel_id = pixel.split('.')[0];
+        const clickhouseQuery = spawnSync( 'clickhouse-client', [ '--host',  clickhouseHost, '--query', `SELECT DISTINCT request FROM metrics.pixels WHERE pixel_id = '${pixel_id}' AND date > now() - INTERVAL 30 DAY AND pixel LIKE '${pixel}%' LIMIT 1000` ] );
         const resultString = clickhouseQuery.stdout.toString();
         const resultErr = clickhouseQuery.stderr.toString();
         if (resultErr) {
