@@ -46,6 +46,13 @@ describe('No common params nor suffixes', () => {
         const expectedErrors = ["must NOT have additional properties. Found extra property 'param2'"];
         expect(errors).to.have.members(expectedErrors);
     });
+
+    it('ignores cache buster', () => {
+        const prefix = 'simplePixel';
+        const url = `/t/${prefix}?12345&param1=true`;
+        const errors = paramsValidator.validateLivePixels(pixelDefs[prefix], prefix, url);
+        expect(errors).to.be.empty;
+    });
 });
 
 describe('Common params', () => {

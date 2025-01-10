@@ -140,7 +140,8 @@ export class ParamsValidator {
 
         const urlSplit = url.split('/')[2].split('?');
         const livePixelName = urlSplit[0].replaceAll('_', '.');
-        const livePixelRequestParams = urlSplit[1];
+        // grab pixel parameters with any preciding cache buster removed
+        const livePixelRequestParams = /^([0-9]+&)?(.*)$/.exec(urlSplit[1] || '')[2];
 
         // 1) Validate pixel name if it's parameterized
         if (livePixelName.length > prefix.length) {
