@@ -136,7 +136,7 @@ export class ParamsValidator {
 
     // TODO: this function is a rough PoC, will be hashed out in
     // https://app.asana.com/0/1205243787707480/1207703134691882/f
-    validateLivePixels(pixelDef, ignoreParams, prefix, url, minVersion) {
+    validateLivePixels(pixelDef, prefix, url, ignoreParams = {}, minVersion = {}) {
         const errors = [];
 
         const urlSplit = url.split('/')[2].split('?');
@@ -145,13 +145,12 @@ export class ParamsValidator {
         const livePixelRequestParams = /^([0-9]+&)?(.*)$/.exec(urlSplit[1] || '')[2];
 
         // 1) Validate pixel params
-        const combinedParams = pixelDef.parameters . ignoreParams;
+        const combinedParams = [...pixelDef.parameters, ...Object.values(ignoreParams)];
         const validateParams = this.compileParamsSchema(combinedParams);
         const paramsStruct = Object.fromEntries(new URLSearchParams(livePixelRequestParams));
         const versionKey = minVersion.key;
         if (versionKey && paramsStruct[versionKey]) {
             if (compareVersions(paramsStruct[versionKey], minVersion.version) == -1) {
-                // console.log('skipping appVersion', paramsStruct[versionKey])
                 return []
             }
         }

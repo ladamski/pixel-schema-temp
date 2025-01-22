@@ -7,11 +7,6 @@ import { spawnSync } from 'child_process';
 
 const clickhouseHost = process.env.CLICKHOUSE_HOST
 
-if (!clickhouseHost) {
-    console.error('Please set CLICKHOUSE_HOST in your ENV');
-    process.exit(1);
-}
-
 const args = process.argv.slice(2);
 const mainDir = args[0];
 
@@ -19,7 +14,7 @@ const productDef = JSON5.parse(fs.readFileSync(`${mainDir}/product.json`).toStri
 // Whether to force all schemas and pixels to lowercase
 const forceLowerCase = productDef.forceLowerCase;
 
-const pixelDefs = JSON5.parse(getNormalizedCase(fs.readFileSync(`${args[1]}`).toString()));
+const pixelDefs = JSON5.parse(getNormalizedCase(fs.readFileSync(`${mainDir}/pixels/${args[1]}`).toString()));
 const commonParams = JSON5.parse(getNormalizedCase(fs.readFileSync(`${mainDir}/common_params.json`).toString()));
 const ignoreParams = JSON5.parse(getNormalizedCase(fs.readFileSync(`${mainDir}/ignore_params.json`).toString()));
 const commonSuffixes = JSON5.parse(getNormalizedCase(fs.readFileSync(`${mainDir}/common_suffixes.json`).toString()));
@@ -35,8 +30,13 @@ function main() {
         console.log('Validating', prefix)
         validateSinglePixel(pixelDefs, prefix, url);
     } else {
+        if (!clickhouseHost) {
+            console.error('Please set CLICKHOUSE_HOST in your ENV');
+            process.exit(1);
+        }
         const pixelQueryResults = queryClickhouse(pixelDefs);
         for (const prefix of Object.keys(pixelQueryResults)) {
+            console.log('Validating', prefix)
             validateQueryForPixels(prefix, pixelQueryResults[prefix], paramsValidator)
         }
     }
@@ -78,12 +78,12 @@ function validateQueryForPixels(prefix, pixelQuery, paramsValidator) {
         const url = parts[1];
         const pixelDef = pixelDefs[prefix];
 
-        logErrors(`ERRORS for '${pixelRequest}\n`, paramsValidator.validateLivePixels(pixelDef, ignoreParams, prefix, line, minVersion));
+        logErrors(`ERROR for '${pixelRequest}\n`, paramsValidator.validateLivePixels(pixelDef, prefix, line, ignoreParams, minVersion));
     }
 }
 
 function validateSinglePixel(pixelDefs, prefix, url) {
-    logErrors('ERRORS:', paramsValidator.validateLivePixels(pixelDefs[prefix], prefix, url));
+    logErrors('ERROR:', paramsValidator.validateLivePixels(pixelDefs[prefix], prefix, url));
 }
 
 function getNormalizedCase(value) {
