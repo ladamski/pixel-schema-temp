@@ -43,7 +43,7 @@ function main() {
 }
 
 function queryClickhouse(pixelDefs) {
-    let agents = "'" + productDef.agents.join("','") + "'";
+    const agents = "'" + productDef.agents.join("','") + "'";
     const agentString = productDef.agents.length ? `AND agent IN (${agents})` : '';
 
     const pixelQueryResults = {};
@@ -65,7 +65,7 @@ function queryClickhouse(pixelDefs) {
 }
 
 function validateQueryForPixels(prefix, pixelQuery, paramsValidator) {
-    let minVersion = productDef.target;
+    const minVersion = productDef.target;
 
     const lines = pixelQuery.split('\n');
     console.log(`Received ${lines.length} results`)
