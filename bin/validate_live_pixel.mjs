@@ -43,15 +43,14 @@ function main() {
 }
 
 function queryClickhouse(pixelDefs) {
-    var agents = "'" + productDef.agents.join("','") + "'";
+    let agents = "'" + productDef.agents.join("','") + "'";
     const agentString = productDef.agents.length ? `AND agent IN (${agents})` : '';
 
     const pixelQueryResults = {};
     for(const pixel of Object.keys(pixelDefs)) {
         console.log('Querying for', pixel)
-        const pixel_id = pixel.split(/[-\.]/)[0];
-        const queryString = `SELECT DISTINCT request FROM metrics.pixels WHERE pixel_id = '${pixel_id}' AND date > now() - INTERVAL 30 DAY AND pixel ILIKE '${pixel}%' ${agentString} LIMIT 1000`;
-        console.log('queryString', queryString)
+        const pixelID = pixel.split(/[-.]/)[0];
+        const queryString = `SELECT DISTINCT request FROM metrics.pixels WHERE pixel_id = '${pixelID}' AND date > now() - INTERVAL 30 DAY AND pixel ILIKE '${pixel}%' ${agentString} LIMIT 1000`;
         const clickhouseQuery = spawnSync( 'clickhouse-client', [ '--host',  clickhouseHost, '--query', queryString ] );
         const resultString = clickhouseQuery.stdout.toString();
         const resultErr = clickhouseQuery.stderr.toString();
@@ -66,16 +65,14 @@ function queryClickhouse(pixelDefs) {
 }
 
 function validateQueryForPixels(prefix, pixelQuery, paramsValidator) {
-    var minVersion = productDef.target;
+    let minVersion = productDef.target;
 
     const lines = pixelQuery.split('\n');
     console.log(`Received ${lines.length} results`)
     for (let line of lines) {
-        if (line == '') continue;
+        if (line === '') continue;
         line = getNormalizedCase(line);
         const pixelRequest = line.split('/')[2];
-        const parts = pixelRequest.split('?');
-        const url = parts[1];
         const pixelDef = pixelDefs[prefix];
 
         logErrors(`ERROR for '${pixelRequest}\n`, paramsValidator.validateLivePixels(pixelDef, prefix, line, ignoreParams, minVersion));

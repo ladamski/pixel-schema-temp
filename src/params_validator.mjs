@@ -150,7 +150,7 @@ export class ParamsValidator {
         const paramsStruct = Object.fromEntries(new URLSearchParams(livePixelRequestParams));
         const versionKey = minVersion.key;
         if (versionKey && paramsStruct[versionKey]) {
-            if (compareVersions(paramsStruct[versionKey], minVersion.version) == -1) {
+            if (compareVersions(paramsStruct[versionKey], minVersion.version) === -1) {
                 return []
             }
         }
