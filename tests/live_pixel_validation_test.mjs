@@ -106,10 +106,10 @@ describe('Common suffixes', () => {
                 'exception',
                 {
                     enum: [1, 2, 3],
-                }
+                },
             ],
-            parameters: []
-    },
+            parameters: [],
+        },
     };
 
     it('both common and custom suffix should pass', () => {

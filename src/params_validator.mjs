@@ -4,7 +4,6 @@ import { formatAjvErrors } from './error_utils.mjs';
 
 import { compareVersions } from 'compare-versions';
 
-
 /**
  * Validator for pixel parameters and suffixes:
  * 1) ensures they can be used as schemas themselves to validate live pixels
@@ -91,7 +90,7 @@ export class ParamsValidator {
         const pixelNameSchema = {
             type: 'object',
             properties,
-            additionalProperties: false
+            additionalProperties: false,
         };
 
         return this.#ajv.compile(pixelNameSchema);
@@ -151,7 +150,7 @@ export class ParamsValidator {
         const versionKey = minVersion.key;
         if (versionKey && paramsStruct[versionKey]) {
             if (compareVersions(paramsStruct[versionKey], minVersion.version) === -1) {
-                return []
+                return [];
             }
         }
         validateParams(paramsStruct);
