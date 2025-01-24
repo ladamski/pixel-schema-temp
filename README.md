@@ -74,10 +74,10 @@ To validate:
 ```
 $ cd ${RepoSpecificPixelFolder}
 $ npm i
-$ npx validate-defs .
+$ npx validate-ddg-pixel-defs .
 ```
 
-To validate a single file, you can use `npx validate-defs . -f ${path to file relative to pixels/ directory}`
+To validate a single file, you can use `npx validate-ddg-pixel-defs . -f ${path to file relative to pixels/ directory}`
 
 Validation will also run as part of CI.
 
