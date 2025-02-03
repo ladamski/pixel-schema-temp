@@ -114,7 +114,7 @@ describe('Common suffixes', () => {
                 {
                     enum: [1, 2, 3],
                 },
-            ]
+            ],
         },
     };
 
