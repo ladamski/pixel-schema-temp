@@ -11,22 +11,23 @@ const clickhouseHost = process.env.CLICKHOUSE_HOST;
 
 const args = process.argv.slice(2);
 const mainDir = args[0];
+const pixelDefPath = args[1];
+const prefix = args[2];
 
 const productDef = JSON5.parse(fs.readFileSync(`${mainDir}/product.json`).toString());
 // Whether to force all schemas and pixels to lowercase
 const forceLowerCase = productDef.forceLowerCase;
 
-const pixelDefs = JSON5.parse(getNormalizedCase(fs.readFileSync(`${mainDir}/pixels/${args[1]}`).toString()));
+const pixelDefs = JSON5.parse(getNormalizedCase(fs.readFileSync(`${mainDir}/pixels/${pixelDefPath}`).toString()));
 const commonParams = JSON5.parse(getNormalizedCase(fs.readFileSync(`${mainDir}/common_params.json`).toString()));
 const ignoreParams = JSON5.parse(getNormalizedCase(fs.readFileSync(`${mainDir}/ignore_params.json`).toString()));
 const commonSuffixes = JSON5.parse(getNormalizedCase(fs.readFileSync(`${mainDir}/common_suffixes.json`).toString()));
 const paramsValidator = new ParamsValidator(commonParams, commonSuffixes);
 
 function main() {
-    console.log(`Processing pixels defined in ${args[1]}`);
+    console.log(`Processing pixels defined in ${pixelDefPath}`);
 
-    if (args[2]) {
-        const prefix = args[2];
+    if (prefix) {
         const url = args[3];
 
         console.log('Validating', prefix);
@@ -52,7 +53,7 @@ function queryClickhouse(pixelDefs) {
     for (const pixel of Object.keys(pixelDefs)) {
         console.log('Querying for', pixel);
         const pixelID = pixel.split(/[-.]/)[0];
-        const queryString = `SELECT DISTINCT request FROM metrics.pixels WHERE pixel_id = '${pixelID}' AND date > now() - INTERVAL 30 DAY AND pixel ILIKE '${pixel}%' AND request NOT ILIKE '%test=1%' ${agentString} LIMIT 1000`;
+        const queryString = `SELECT DISTINCT request FROM metrics.pixels WHERE pixel_id = '${pixelID}' AND date > now() - INTERVAL 30 DAY AND pixel ILIKE '${pixel}%' AND request NOT ILIKE '%test=1%' ${agentString} LIMIT 100000`;
         const clickhouseQuery = spawnSync('clickhouse-client', ['--host', clickhouseHost, '--query', queryString]);
         const resultString = clickhouseQuery.stdout.toString();
         const resultErr = clickhouseQuery.stderr.toString();
