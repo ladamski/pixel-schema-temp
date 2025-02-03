@@ -133,8 +133,6 @@ export class ParamsValidator {
         return this.#ajv.compile(pixelParams);
     }
 
-    // TODO: this function is a rough PoC, will be hashed out in
-    // https://app.asana.com/0/1205243787707480/1207703134691882/f
     validateLivePixels(pixelDef, prefix, url, ignoreParams = {}, minVersion = {}) {
         const errors = [];
 
