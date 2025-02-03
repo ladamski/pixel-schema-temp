@@ -142,7 +142,7 @@ export class ParamsValidator {
         const livePixelRequestParams = /^([0-9]+&)?(.*)$/.exec(urlSplit[1] || '')[2];
 
         // 1) Validate pixel params
-        const combinedParams = [...pixelDef.parameters, ...Object.values(ignoreParams)];
+        const combinedParams = pixelDef.parameters ? [...pixelDef.parameters, ...Object.values(ignoreParams)] : [...Object.values(ignoreParams)];
         const validateParams = this.compileParamsSchema(combinedParams);
         const paramsStruct = Object.fromEntries(new URLSearchParams(livePixelRequestParams));
         const versionKey = minVersion.key;
