@@ -6,6 +6,7 @@
  * Formats AJV validation errors
  *
  * @param {Array<import("ajv").ErrorObject>} validationErrors - array of AJV error objects
+ * @param {*} suffixes - object containing request suffixes
  * @returns {Array<string>} - array of formatted error messages
  */
 function formatAjvErrors(validationErrors, suffixes) {
