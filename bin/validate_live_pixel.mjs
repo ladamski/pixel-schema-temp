@@ -83,7 +83,7 @@ function validateQueryForPixels(prefix, pixelQuery, paramsValidator) {
 }
 
 function validateSinglePixel(pixelDefs, prefix, url) {
-    logErrors('ERROR:', paramsValidator.validateLivePixels(pixelDefs[prefix], prefix, url));
+    logErrors('ERROR:', paramsValidator.validateLivePixels(pixelDefs[prefix], prefix, getNormalizedCase(url)));
 }
 
 function getNormalizedCase(value) {
