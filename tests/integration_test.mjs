@@ -70,7 +70,7 @@ describe('Valid live pixel', () => {
 describe('Valid live pixel, case-insensitive suffix', () => {
     it('should exit normally', (done) => {
         exec(
-            `npm run validate-ddg-live-pixel ${validCaseInsensitiveDefsPath} pixel_subfolder/test_pixels.json m.windows.crash.stable /t/m_windows_crash_stable_Daily?channel=stable`,
+            `npm run validate-ddg-live-pixel ${validCaseInsensitiveDefsPath} test_pixels.json m.windows.crash.stable /t/m_windows_crash_stable_Daily?channel=stable`,
             (error, _, stderr) => {
                 console.warn('stderr', stderr);
                 expect(stderr.length).to.equal(0);
@@ -85,7 +85,7 @@ describe('Valid live pixel, case-insensitive suffix', () => {
 describe('Valid live pixel, case-insensitive param', () => {
     it('should exit normally', (done) => {
         exec(
-            `npm run validate-ddg-live-pixel ${validCaseInsensitiveDefsPath} pixel_subfolder/test_pixels.json m.windows.crash.stable /t/m_windows_crash_stable_daily?channel=Stable`,
+            `npm run validate-ddg-live-pixel ${validCaseInsensitiveDefsPath} test_pixels.json m.windows.crash.stable /t/m_windows_crash_stable_daily?channel=Stable`,
             (error, _, stderr) => {
                 console.warn('stderr', stderr);
                 expect(stderr.length).to.equal(0);
