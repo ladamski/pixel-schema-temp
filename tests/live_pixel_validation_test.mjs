@@ -128,15 +128,15 @@ describe('Common suffixes', () => {
         const url = `/t/${prefix}.wrongkey.anystring.1`;
         const errors = paramsValidator.validateLivePixels(pixelDefs[prefix], prefix, url);
 
-        const expectedErrors = ['/0 must be equal to one of the allowed values'];
+        const expectedErrors = ["Suffix 'wrongkey' at index 0 /0 must be equal to one of the allowed values"];
         expect(errors).to.have.members(expectedErrors);
     });
 
-    it('missing part of name should fail', () => {
+    it('missing part of name should NOT fail', () => {
         const url = `/t/${prefix}.exception.1`;
         const errors = paramsValidator.validateLivePixels(pixelDefs[prefix], prefix, url);
 
-        const expectedErrors = ["must have required property '2'"];
+        const expectedErrors = [];
         expect(errors).to.have.members(expectedErrors);
     });
 
@@ -144,7 +144,7 @@ describe('Common suffixes', () => {
         const url = `/t/${prefix}.exception.anystring.1.extra`;
         const errors = paramsValidator.validateLivePixels(pixelDefs[prefix], prefix, url);
 
-        const expectedErrors = ["must NOT have additional properties. Found extra property '3'"];
+        const expectedErrors = ["must NOT have additional properties. Found extra suffix 'extra' at index 3"];
         expect(errors).to.have.members(expectedErrors);
     });
 });

@@ -6,9 +6,10 @@
  * Formats AJV validation errors
  *
  * @param {Array<import("ajv").ErrorObject>} validationErrors - array of AJV error objects
+ * @param {*} suffixes - object containing request suffixes
  * @returns {Array<string>} - array of formatted error messages
  */
-function formatAjvErrors(validationErrors) {
+function formatAjvErrors(validationErrors, suffixes) {
     const errors = [];
     if (!Array.isArray(validationErrors)) {
         return errors;
@@ -19,7 +20,16 @@ function formatAjvErrors(validationErrors) {
         if (error.message === 'must NOT be valid') return;
 
         let formattedError = `${error.instancePath} ${error.message}`;
-        if (error.params.additionalProperty) formattedError += `. Found extra property '${error.params.additionalProperty}'`;
+        if (suffixes) {
+            if (error.params.additionalProperty) {
+                formattedError += `. Found extra suffix '${suffixes[error.params.additionalProperty]}' at index ${error.params.additionalProperty}`;
+            } else if (error.params.allowedValues) {
+                const idx = error.instancePath ? Number(error.instancePath.split('/')[1]) : error.params.additionalProperty;
+                formattedError = `Suffix '${suffixes[idx]}' at index ${idx} ` + formattedError;
+            }
+        } else {
+            if (error.params.additionalProperty) formattedError += `. Found extra property '${error.params.additionalProperty}'`;
+        }
 
         errors.push(formattedError.trim());
     });
