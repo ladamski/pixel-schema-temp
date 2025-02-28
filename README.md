@@ -26,6 +26,33 @@ RepoSpecificPixelFolder
 
 You can organize the files and sub-directories within `pixels` however you like, the example above is just one option.
 
+## Validation
+**Background**:
+* Validation ensures that pixel definitions conform to the [schema](./schemas/pixel_schema.json5) and follow a consistent format.
+* Validation will run as part of CI, but you can also run it manually - details below.
+* A repository that supports pixel definitions will have a folder setup with `package.json` pointing to this module, referred to as `PackageFolder` below. 
+    * Note: usually `PackageFolder` is the same as the `RepoSpecificPixelFolder` referenced in the previous section.
+
+**Pre-requisites**:
+* Install Node.js: see instructions in https://nodejs.org/en/download
+* Install dependencies:
+    ```
+    $ cd ${PackageFolder}
+    $ npm i
+    ```
+
+**Running validation**:
+```
+$ cd ${PackageFolder}
+$ npm run validate-defs
+```
+Note:
+* If formatting errors are found, you can fix them with `npm run lint.fix`
+* For schema validation failures, check the output and apply fixes manually
+* You can also (re)validate a single file: 
+    * Schema validation: `npx validate-ddg-pixel-defs . -f ${path to file relative to PackageFolder/pixels/ directory}`
+    * Formatting: `npx prettier ${path to file relative to PackageFolder/ directory} --check`
+
 ## Documenting a pixel
 Each JSON file can contain multiple pixels, keyed by the static portion of the pixel name. 
 Add your pixel where it makes the most sense.
@@ -66,20 +93,6 @@ Optional properties for each parameter:
 
 ### Temporary pixels
 If the pixel is temporary, set an expiration date in the `expires` property.
-
-## Validation
-A repository that supports pixel definitions will have a folder setup with `package.json` pointing to this module - likely in the same `RepoSpecificPixelFolder` referenced above.
-
-To validate:
-```
-$ cd ${RepoSpecificPixelFolder}
-$ npm i
-$ npx validate-ddg-pixel-defs .
-```
-
-To validate a single file, you can use `npx validate-ddg-pixel-defs . -f ${path to file relative to pixels/ directory}`
-
-Validation will also run as part of CI.
 
 ## License
 DuckDuckGo Pixels Schema is distributed under the [Apache 2.0 License](LICENSE).
