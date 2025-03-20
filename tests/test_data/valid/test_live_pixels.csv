@@ -1,0 +1,14 @@
+pixel,params
+m.my.first.unknown-pixel,[]
+second-unknown-pixel,[]
+m.my.first.pixel.test,[]
+m.my.first.pixel.test,['extraParam=10']
+m.my.first.pixel.test.extra-suffix,[]
+m.my.first.pixel.unexpected-suffix,[]
+m.my.first.pixel.new.unexpected-suffix2,[]
+m.my.first.pixel.new.exceptiontype.some-exception.unexpected-suffix3,[]
+m.my.first.pixel.new.exceptiontype.x.android.unexpected-4,[]
+m.my.first.pixel.new.exceptiontype.x.android.phone,['appVersion=wrongFormat']
+m.my.first.pixel.skip-due-to-version,"['appVersion=0.0', 'count=unexpectedButSkip']"
+m.my.first.pixel,"['appVersion=2.0.0', 'count=wrongFormat']"
+m.my.first.pixel,"['appVersion=2.0.3', 'count=42', 'date=2025-03-12']"

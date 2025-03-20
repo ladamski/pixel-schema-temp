@@ -1,8 +1,5 @@
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import { formatAjvErrors } from './error_utils.mjs';
-
-import { compareVersions } from 'compare-versions';
 
 /**
  * Validator for pixel parameters and suffixes:
@@ -131,43 +128,5 @@ export class ParamsValidator {
         };
 
         return this.#ajv.compile(pixelParams);
-    }
-
-    validateLivePixels(pixelDef, prefix, url, ignoreParams = {}, minVersion = {}) {
-        const errors = [];
-
-        const urlSplit = url.split('/')[2].split('?');
-        const livePixelName = urlSplit[0].replaceAll('_', '.');
-        // grab pixel parameters with any preceding cache buster removed
-        const livePixelRequestParams = /^([0-9]+&)?(.*)$/.exec(urlSplit[1] || '')[2];
-
-        // 1) Validate pixel params
-        const combinedParams = pixelDef.parameters
-            ? [...pixelDef.parameters, ...Object.values(ignoreParams)]
-            : [...Object.values(ignoreParams)];
-        const validateParams = this.compileParamsSchema(combinedParams);
-        const paramsStruct = Object.fromEntries(new URLSearchParams(livePixelRequestParams));
-        const versionKey = minVersion.key;
-        if (versionKey && paramsStruct[versionKey]) {
-            if (compareVersions(paramsStruct[versionKey], minVersion.version) === -1) {
-                return [];
-            }
-        }
-        validateParams(paramsStruct);
-        errors.push(...formatAjvErrors(validateParams.errors));
-
-        // 2) Validate pixel name if it's parameterized
-        if (livePixelName.length > prefix.length) {
-            const pixelSuffix = livePixelName.split(`${prefix}.`)[1];
-            const pixelNameStruct = {};
-            pixelSuffix.split('.').forEach((suffix, idx) => {
-                pixelNameStruct[idx] = suffix;
-            });
-            const validatePixelName = this.compileSuffixesSchema(pixelDef.suffixes);
-            validatePixelName(pixelNameStruct);
-            errors.push(...formatAjvErrors(validatePixelName.errors, pixelNameStruct));
-        }
-
-        return errors;
     }
 }
