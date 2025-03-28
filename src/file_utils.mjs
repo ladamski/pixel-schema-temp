@@ -58,7 +58,7 @@ function readSchemaFile(mainPixelDir, filename) {
  * @returns {object} common parameters
  */
 export function readCommonParams(mainPixelDir) {
-    return readSchemaFile(mainPixelDir, 'common_params.json');
+    return readSchemaFile(mainPixelDir, 'params_dictionary.json');
 }
 
 /**
@@ -67,7 +67,7 @@ export function readCommonParams(mainPixelDir) {
  * @returns {object} common suffixes
  */
 export function readCommonSuffixes(mainPixelDir) {
-    return readSchemaFile(mainPixelDir, 'common_suffixes.json');
+    return readSchemaFile(mainPixelDir, 'suffixes_dictionary.json');
 }
 
 /**
