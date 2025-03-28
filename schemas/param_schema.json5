@@ -19,6 +19,11 @@
                             "type": "string",
                             "description": "Regex for describing dynamic params",
                             "examples": ["^ud[0-9]$"] // results in ud1, ud2,...ud9 param keys
+                        },
+                        "encoding": {
+                            "type": "string",
+                            "description": "encoding type",
+                            "enum": ["base64"]
                         }
                     },
                     "anyOf": [

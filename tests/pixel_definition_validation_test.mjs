@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 
 import { DefinitionsValidator } from '../src/definitions_validator.mjs';
+import { ParamsValidator } from '../src/params_validator.mjs';
 
 describe('Validating commons', () => {
     const commons = {
@@ -243,5 +244,65 @@ describe('Pixel with suffixes', () => {
 
         const errors = validator.validatePixelsDefinition({ pixel });
         expect(errors).to.be.empty;
+    });
+});
+
+describe('Object-based params', () => {
+    const paramsValidator = new ParamsValidator({}, {});
+    it('incorrect type for propertied object', () => {
+        const param = {
+            key: 'objKey',
+            description: 'An object param',
+            type: 'string',
+            properties: {
+                p1: { type: 'string' },
+            },
+        };
+
+        expect(() => paramsValidator.compileParamsSchema([param])).to.throw(
+            'strict mode: missing type "object" for keyword "properties" at "#/properties/objKey"',
+        );
+    });
+
+    it('additionalProperties not allowed', () => {
+        const param = {
+            key: 'objKey',
+            description: 'An object param',
+            type: 'object',
+            additionalProperties: true,
+        };
+
+        expect(() => paramsValidator.compileParamsSchema([param])).to.throw('additionalProperties are not allowed');
+    });
+
+    it('unknown keyword', () => {
+        const param = {
+            key: 'objKey',
+            description: 'An object param',
+            type: 'object',
+            properties: {
+                p1: {
+                    type: 'string',
+                    unexpected: 'property',
+                },
+            },
+        };
+
+        expect(() => paramsValidator.compileParamsSchema([param])).to.throw('strict mode: unknown keyword: "unexpected"');
+    });
+
+    it('valid schema', () => {
+        const param = {
+            key: 'objKey',
+            description: 'An object param',
+            type: 'object',
+            properties: {
+                p1: {
+                    type: 'string',
+                },
+            },
+        };
+
+        expect(() => paramsValidator.compileParamsSchema([param])).to.not.throw();
     });
 });

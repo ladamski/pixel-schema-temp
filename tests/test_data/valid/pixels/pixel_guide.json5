@@ -61,6 +61,34 @@
                 },
                 // Examples - used when params are more open-ended
                 "examples": [["tracker1", "tracker2"], ["tracker3"]]
+            },
+            {
+                "key": "customMetadata",
+                "description": "Complex object type",
+                // See https://json-schema.org/understanding-json-schema/reference/object
+                "type": "object",
+                "encoding": "base64", // encoding can be omitted if the JSON object is sent in the raw
+                "properties": {
+                    "serviceState": {
+                        "description": "State of the service",
+                        "enum": ["Running", "Stopped"]
+                    },
+                    // Nested object are allowed, and can have their own properties:
+                    "serviceMetadata": {
+                        "description": "details about the VPN service",
+                        "type": "object",
+                        "properties": {
+                            "latency": {
+                                "description": "Latency of the VPN",
+                                "enum": ["excellent", "bad"]
+                            },
+                            "domainProxyRunning": {
+                                "description": "Whether the domain proxy is running",
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
             }
         ],
         // [Optional] if temporary pixel - specify expiration date:

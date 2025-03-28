@@ -1,5 +1,6 @@
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
+import traverse from 'json-schema-traverse';
 
 /**
  * Validator for pixel parameters and suffixes:
@@ -8,7 +9,7 @@ import addFormats from 'ajv-formats';
  * 3) validates live pixels
  */
 export class ParamsValidator {
-    #ajv = new Ajv2020({ allErrors: true, coerceTypes: true });
+    #ajv = new Ajv2020({ allErrors: true, coerceTypes: true, strict: true, allowUnionTypes: true });
     #commonParams;
     #commonSuffixes;
 
@@ -19,6 +20,7 @@ export class ParamsValidator {
         addFormats(this.#ajv);
         this.#ajv.addKeyword('key');
         this.#ajv.addKeyword('keyPattern');
+        this.#ajv.addKeyword('encoding');
     }
 
     /**
@@ -46,7 +48,7 @@ export class ParamsValidator {
     }
 
     /**
-     * Helper function to replace shortcuts and ensure String types by default
+     * Helper function to replace shortcuts, ensure String types by default, and disallow additionalProperties
      * @param {*} item - shortcut or a param/suffix
      * @param {*} common - object containing common params/suffixes
      * @returns updated param/suffix
@@ -57,13 +59,24 @@ export class ParamsValidator {
 
         // default type is string
         updatedItem.type = updatedItem.type || 'string';
+
+        traverse(updatedItem, (schema) => {
+            // Explicitly disallow additionalProperties for obj-params
+            if (schema.type !== 'object') return;
+
+            if (schema.additionalProperties) {
+                throw new Error(`additionalProperties are not allowed`);
+            }
+            schema.additionalProperties = false;
+        });
+
         return updatedItem;
     }
 
     /**
      * Replaces shortcuts to common suffixes and compiles the suffix schema
-     * @param {*} suffixes
-     * @returns an ajv compiled schema
+     * @param {Object} suffixes
+     * @returns {ValidateFunction} an ajv compiled schema
      * @throws if any errors are found
      */
     compileSuffixesSchema(suffixes) {
@@ -94,9 +107,9 @@ export class ParamsValidator {
     }
 
     /**
-     * Replaces shortcuts to common params and compiles the parameters schema
-     * @param {*} parameters
-     * @returns an ajv compiled schema
+     * Compiles provided parameters into an AJV schema
+     * @param {Object[]} parameters
+     * @returns {Object} schemas - resultant compiled AJV schema
      * @throws if any errors are found
      */
     compileParamsSchema(parameters) {

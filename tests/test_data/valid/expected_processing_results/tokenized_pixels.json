@@ -39,6 +39,38 @@
                                         "tracker3"
                                     ]
                                 ]
+                            },
+                            {
+                                "key": "customMetadata",
+                                "description": "Complex object type",
+                                "type": "object",
+                                "encoding": "base64",
+                                "properties": {
+                                    "serviceState": {
+                                        "description": "State of the service",
+                                        "enum": [
+                                            "Running",
+                                            "Stopped"
+                                        ]
+                                    },
+                                    "serviceMetadata": {
+                                        "description": "details about the VPN service",
+                                        "type": "object",
+                                        "properties": {
+                                            "latency": {
+                                                "description": "Latency of the VPN",
+                                                "enum": [
+                                                    "excellent",
+                                                    "bad"
+                                                ]
+                                            },
+                                            "domainProxyRunning": {
+                                                "description": "Whether the domain proxy is running",
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         ],
                         "suffixes": [
