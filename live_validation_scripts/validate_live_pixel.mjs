@@ -17,10 +17,13 @@ function main(mainDir, csvFile) {
     const productDef = fileUtils.readProductDef(mainDir);
     const commonParams = fileUtils.readCommonParams(mainDir);
     const commonSuffixes = fileUtils.readCommonSuffixes(mainDir);
+    const globalIgnoreParams = fileUtils.readIgnoreParams(fileUtils.GLOBAL_PIXEL_DIR);
 
     const tokenizedPixels = fileUtils.readTokenizedPixels(mainDir);
     const paramsValidator = new ParamsValidator(commonParams, commonSuffixes);
-    const ignoreParams = fileUtils.readIgnoreParams(mainDir);
+    const pixelIgnoreParams = fileUtils.readIgnoreParams(mainDir);
+
+    const ignoreParams = [...(Object.values(pixelIgnoreParams) || []), ...Object.values(globalIgnoreParams)];
 
     const liveValidator = new LivePixelsValidator(tokenizedPixels, productDef, ignoreParams, paramsValidator);
     let processedPixels = 0;
