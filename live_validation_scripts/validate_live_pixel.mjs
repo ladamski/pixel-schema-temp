@@ -17,7 +17,7 @@ function main(mainDir, csvFile) {
     const productDef = fileUtils.readProductDef(mainDir);
     const commonParams = fileUtils.readCommonParams(mainDir);
     const commonSuffixes = fileUtils.readCommonSuffixes(mainDir);
-    const globalIgnoreParams = fileUtils.readIgnoreParams('global-pixel-definitions');
+    const globalIgnoreParams = fileUtils.readIgnoreParams(fileUtils.GLOBAL_PIXEL_DIR);
 
     const tokenizedPixels = fileUtils.readTokenizedPixels(mainDir);
     const paramsValidator = new ParamsValidator(commonParams, commonSuffixes);

@@ -7,7 +7,7 @@ import path from 'path';
 import JSON5 from 'json5';
 
 const RESULTS_DIR = 'pixel_processing_results';
-const GLOBAL_PIXEL_DEFINITIONS = 'global-pixel-definitions';
+export const GLOBAL_PIXEL_DIR = 'global-pixel-definitions';
 
 /**
  * Attempt to read and parse a file using JSON5. Tries .json
