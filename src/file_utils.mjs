@@ -7,10 +7,11 @@ import path from 'path';
 import JSON5 from 'json5';
 
 const RESULTS_DIR = 'pixel_processing_results';
+const GLOBAL_PIXEL_DEFINITIONS = 'global-pixel-definitions';
 
 /**
- * Attempt to read and parse a file using JSON5. If the given filePath
- * does not exist try switching the extension (.json to .json5 or vice versa).
+ * Attempt to read and parse a file using JSON5. Tries .json
+ * first but will try to json5 if missing.
  *
  * @param {string} filePath - Absolute path to a file
  * @returns {object} Parsed file content
@@ -18,17 +19,10 @@ const RESULTS_DIR = 'pixel_processing_results';
  */
 function parseFile(filePath) {
     let resolvedPath = filePath;
-    if (!fs.existsSync(filePath)) {
-        const { dir, name, ext } = path.parse(filePath);
-        let alternativeExt;
-        if (ext === '.json') {
-            alternativeExt = '.json5';
-        } else if (ext === '.json5') {
-            alternativeExt = '.json';
-        } else {
-            throw new Error(`Unsupported file extension: ${ext}`);
-        }
-        const altPath = path.join(dir, name + alternativeExt);
+    if (!fs.existsSync(resolvedPath)) {
+        // Try the '.json5' fallback
+        const { dir, name } = path.parse(filePath);
+        const altPath = path.join(dir, `${name}.json5`);
         if (fs.existsSync(altPath)) {
             resolvedPath = altPath;
         } else {
