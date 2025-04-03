@@ -13,14 +13,11 @@ import { tokenizePixelDefs } from './src/tokenizer.mjs';
 /**
  * Given a pixels dir, build a LivePixelsValidator. Optionally, override values on disk with
  * provided overrides.
- *
- * @param {{
- *  commonParams: object;
- *  commonSuffixes: object;
- *  productDef: ProductDefinition;
- *  ignoreParams: object;
- *  tokenizedPixels: object;
- * }} overrideOptions
+ * @param {object} commonParams
+ * @param {object} commonSuffixes
+ * @param {ProductDefinition} productDef
+ * @param {object} ignoreParams
+ * @param {object} tokenizedPixels
  * @returns
  */
 export function buildLivePixelValidator(commonParams, commonSuffixes, productDef, ignoreParams, tokenizedPixels) {
@@ -58,14 +55,14 @@ export function validateSinglePixel(validator, url) {
             .filter((v) => !v.match(/^\d+$/)),
     );
     // reset errors in validator
-    validator.pixelErrors = {}
-    validator.undocumentedPixels.clear()
+    validator.pixelErrors = {};
+    validator.undocumentedPixels.clear();
     // validate
     validator.validatePixel(pixel, params);
     if (validator.undocumentedPixels.size > 0) {
-        throw new Error(`Undocumented Pixel: ${validator.undocumentedPixels}`)
+        throw new Error(`Undocumented Pixel: ${validator.undocumentedPixels}`);
     }
     if (Object.keys(validator.pixelErrors).length > 0) {
-        throw new Error(`Pixel Errors: ${validator.pixelErrors}`)
+        throw new Error(`Pixel Errors: ${validator.pixelErrors}`);
     }
 }
