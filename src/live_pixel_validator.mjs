@@ -7,6 +7,7 @@ import { ROOT_PREFIX } from './constants.mjs';
 
 /**
  * @typedef {import('./types.mjs').ProductDefinition} ProductDefinition
+ * @typedef {import('./params_validator.mjs').ParamsValidator} ParamsValidator
  */
 
 export class LivePixelsValidator {

@@ -10,6 +10,9 @@
         "validate-ddg-pixel-defs": "./bin/validate_schema.mjs",
         "validate-ddg-live-pixel": "./bin/validate_live_pixel.mjs"
     },
+    "exports": {
+        ".": "./main.mjs"
+    },
     "scripts": {
         "test": "mocha ./tests/**/*.mjs",
         "test.coverage": "c8 mocha ./tests/**/*.mjs",
