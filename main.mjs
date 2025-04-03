@@ -60,9 +60,9 @@ export function validateSinglePixel(validator, url) {
     // validate
     validator.validatePixel(pixel, params);
     if (validator.undocumentedPixels.size > 0) {
-        throw new Error(`Undocumented Pixel: ${validator.undocumentedPixels}`);
+        throw new Error(`Undocumented Pixel: ${JSON.stringify(validator.undocumentedPixels)}`);
     }
     if (Object.keys(validator.pixelErrors).length > 0) {
-        throw new Error(`Pixel Errors: ${validator.pixelErrors}`);
+        throw new Error(`Pixel Errors: ${JSON.stringify(validator.pixelErrors)}`);
     }
 }
