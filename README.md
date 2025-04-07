@@ -1,3 +1,4 @@
+## TEST IGNORE
 # Pixels Schema and Validation
 
 This repository holds the JSON schema and code for validating pixel definitions defined by each of DuckDuckGo's products.
